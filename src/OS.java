@@ -1,4 +1,8 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
 
 public class OS {
 
@@ -21,4 +25,12 @@ public class OS {
      //Record the time of every operation for computing your latency and
     resp
      */
+
+    public static void main (String[] args) throws FileNotFoundException{
+        Scanner s = new Scanner(new File("processes.csv"));
+
+
+
+
+    }
 }
