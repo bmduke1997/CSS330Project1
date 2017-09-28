@@ -5,7 +5,7 @@ public class OS {
     public CPU cpu;
     public IOdevice io;
     public boolean isCPUAvailable;
-    //public ProcessTable process_Table; TODO what is the process table???
+    public ProcessTable process_Table; //TODO what is the process table???
     public ArrayList<Process> New_Queue;
     public ArrayList<Process> Ready_Queue;
     public ArrayList<Process> Wait_Queue;
