@@ -11,7 +11,7 @@ public class CPU {
         BusyOrNot=false;
     }
 
-    private Pair/*<int PC, String state>*/ execute(Process P){
+    private Pair execute(Process P){
         BusyOrNot=true;
          /* read the CPU burst number, say #, from the position
         PositionOfNextInstructionToExecute of P.
