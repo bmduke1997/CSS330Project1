@@ -10,10 +10,19 @@ public class ProcessImage {
 
     public ProcessImage(String process) {
 
+        // split the process string into usable data
         String[] data = process.split(",");
+
+        // extract data
         int id = Integer.parseInt(data[0]);
         int arrivalOrder = Integer.parseInt(data[1]);
         int priority = Integer.parseInt(data[2]);
+
+        // get bursts
+        char[] burstData = data[3].toCharArray();
+        int[] bursts = new int[burstData.length];
+        for (int i=0; i < bursts.length; i ++) bursts[i] = Character.getNumericValue(burstData[i]);
+
 
 
 
