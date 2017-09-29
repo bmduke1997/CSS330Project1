@@ -1,19 +1,24 @@
 public class PCB {
 
-    private int id;
+    private int id, priority;
     private long arrivalTime;
     private State state;
     private int pcVal;
 
-    public PCB(int id, long arrivalTime, State state, int pcVal){
+    public PCB(int id, int priority, State state, int pcVal){
         this.id = id;
-        this.arrivalTime = arrivalTime;
+        this.priority = priority;
+        this.arrivalTime = System.currentTimeMillis();
         this.state = state;
         this.pcVal = pcVal;
     }
 
     public int getId() {
         return id;
+    }
+
+    public int getPriority() {
+        return priority;
     }
 
     public int getPcVal() {
@@ -31,8 +36,6 @@ public class PCB {
     public void setState(State state){
         this.state = state;
     }
-
-
 
     //To do: PCB data structure of a process
     //for example: Process_id, Arrive_time, state,
