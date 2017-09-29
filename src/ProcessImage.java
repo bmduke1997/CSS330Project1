@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class ProcessImage {
 
     //Process image class of a process including PCB, code, data and stack
+    //snapshot before goes to cpu
 
     public PCB Pcb_data;
     public String code ;// this will be the io/cpu burst in the text file
