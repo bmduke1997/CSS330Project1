@@ -15,6 +15,7 @@ public class Process extends java.lang.Process {
 
     public Process(String process){
         this.pi = new ProcessImage(process);
+        this.processId = this.pi.getPCB().getId();
     }
 
     public void updateBurst(){

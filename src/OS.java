@@ -42,6 +42,7 @@ public class OS {
                 process_Table.add(p.getPCB());
             }
 
+            int processNbr = New_Queue.size();
             Ready_Queue = New_Queue; //first up is a cpu burst so go ahead and move them all over
             //change the state
             for (int i = 0; i < Ready_Queue.size(); i++){
@@ -57,11 +58,12 @@ public class OS {
                     io = new IOdevice();
 
                     //lets start you genderless people, we don't assume here, what is gender anyway???
-                    while(!Ready_Queue.isEmpty() ||  !Wait_Queue.isEmpty()){
-                        if(!cpu.CPUisBusy() && !Ready_Queue.isEmpty()) {
+                    while(Terminated_Queue.size() != processNbr){
+                        if(!cpu.CPUisBusy()) {
                             //get just completed process from the cup
                             try {
-                                Process p = cpu.getProcess();//TODO will give error
+                                Process p = cpu.getProcess();
+                                cpu.addProcess(null);
                                 process_Table.update(p.getPCB().getId(), State.Waiting);
 
                                 //see if the process being pulled off is terminated
@@ -81,23 +83,26 @@ public class OS {
                             }
                             catch (NullPointerException n){}
 
-                            //putting process on the cpu
-                            Process p = Ready_Queue.get(0); //get the first in the queue and process in cpu
-                            Ready_Queue.remove(0);
+                            if(!Ready_Queue.isEmpty()) {
+                                //putting process on the cpu
+                                Process p = Ready_Queue.get(0); //get the first in the queue and process in cpu
+                                Ready_Queue.remove(0);
 
-                            //run process
-                            p.updateState(State.Running);
-                            process_Table.update(p.getPCB().getId(), State.Running);
-                            cpu.addProcess(p);
-                            System.out.println("New Process on cpu " + p.getPCB().getId());
-                            cpu.run();
+                                //run process
+                                p.updateState(State.Running);
+                                process_Table.update(p.getPCB().getId(), State.Running);
+                                cpu.addProcess(p);
+                                System.out.println("New Process on cpu " + p.getPCB().getId());
+                                cpu.run();
+                            }
                         }
 
-                        if (!io.IOisBusy() && !Wait_Queue.isEmpty()){
+                        if (!io.IOisBusy()){
 
                             //get just completed process from the io
                             try {
-                                Process p = io.getProcess();//TODO will give error
+                                Process p = io.getProcess();
+                                io.addProcess(null);
                                 process_Table.update(p.getPCB().getId(), State.Ready);
 
                                 try {
@@ -115,16 +120,19 @@ public class OS {
                                 }
                             }
                             catch (NullPointerException n){}
-                            //put process on the io
-                            Process p = Wait_Queue.get(0);
-                            Wait_Queue.remove(0); //get first in queue
 
-                            //run
-                            p.updateState(State.Running);
-                            process_Table.update(p.getPCB().getId(), State.Running);
-                            io.addProcess(p);
-                            System.out.println("New Process on io " + p.getPCB().getId());
-                            io.run();
+                            if (!Wait_Queue.isEmpty()) {
+                                //put process on the io
+                                Process p = Wait_Queue.get(0);
+                                Wait_Queue.remove(0); //get first in queue
+
+                                //run
+                                p.updateState(State.Running);
+                                process_Table.update(p.getPCB().getId(), State.Running);
+                                io.addProcess(p);
+                                System.out.println("New Process on io " + p.getPCB().getId());
+                                io.run();
+                            }
                         }
                     }
 
