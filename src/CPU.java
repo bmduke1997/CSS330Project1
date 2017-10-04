@@ -1,4 +1,3 @@
-import jdk.internal.util.xml.impl.Pair;
 
 public class CPU implements Runnable{
 
@@ -20,6 +19,10 @@ public class CPU implements Runnable{
         this.p = p;
     }
 
+    public Process getProcess() {
+        return p;
+    }
+
     private Pair execute(Process P){
         BusyOrNot=true;
          /* read the CPU burst number, say #, from the position
@@ -36,12 +39,12 @@ public class CPU implements Runnable{
         and sent it to I/O queue)
         */
 
-         for (int i = 0; i == (Integer)P.getBurst().getValue(); i++) BubbleSort((Integer)P.getBurst().getValue());
+         for (int i = 0; i == P.getBurst().getValue(); i++) BubbleSort((Integer)P.getBurst().getValue());
 
          BusyOrNot = false;
 
 
-         return new Pair(); //TODO Make actual return
+         return new Pair(0,0); //TODO Make actual return
     }
 
     public String BubbleSort(int IO_burst){

@@ -36,8 +36,8 @@ public class OS {
 
         int choice = Integer.parseInt(s.nextLine());
 
-            while (s.hasNextLine()){
-                Process p = new Process(s.nextLine());
+            while (s2.hasNextLine()){
+                Process p = new Process(s2.nextLine());
                 New_Queue.add(p);
                 process_Table.add(p.getPCB());
             }
@@ -45,7 +45,8 @@ public class OS {
             Ready_Queue = New_Queue; //first up is a cpu burst so go ahead and move them all over
             //change the state
             for (int i = 0; i < Ready_Queue.size(); i++){
-                Ready_Queue.get(i).updateBurst(State.Ready);
+                Ready_Queue.get(i).updateBurst();
+                Ready_Queue.get(i).updateState(State.Ready);
                 int id = Ready_Queue.get(i).getPCB().getId();
                 process_Table.update(id, State.Ready);
             }
@@ -56,11 +57,86 @@ public class OS {
                     io = new IOdevice();
 
                     //lets start you genderless people, we don't assume here, what is gender anyway???
-                    while(!Ready_Queue.isEmpty() &&  !Wait_Queue.isEmpty()){
-                        Process p = Ready_Queue.get(0); //get the first in the queue and process in cpu
-                        Ready_Queue.remove(0);
+                    while(!Ready_Queue.isEmpty() ||  !Wait_Queue.isEmpty()){
+                        if(!cpu.CPUisBusy() && !Ready_Queue.isEmpty()) {
+                            //get just completed process from the cup
+                            try {
+                                Process p = cpu.getProcess();//TODO will give error
+                                process_Table.update(p.getPCB().getId(), State.Waiting);
 
+                                //see if the process being pulled off is terminated
+                                try{
+                                    p.updateBurst();
+                                    p.updateState(State.Waiting);
+                                    System.out.println("got off of cup" + p.getPCB().getId());
+                                    Wait_Queue.add(p);
+                                }
+                                catch (IndexOutOfBoundsException i){
+                                    p.updateState(State.Terminated);
+                                    p.getPCB().setEndTime();
+                                    Terminated_Queue.add(p);
+                                    process_Table.update(p.getPCB().getId(), State.Terminated);
+                                    System.out.println("done in cpu if stmt " +  p.getPCB().getId());
+                                }
+                            }
+                            catch (NullPointerException n){}
+
+                            //putting process on the cpu
+                            Process p = Ready_Queue.get(0); //get the first in the queue and process in cpu
+                            Ready_Queue.remove(0);
+
+                            //run process
+                            p.updateState(State.Running);
+                            process_Table.update(p.getPCB().getId(), State.Running);
+                            cpu.addProcess(p);
+                            System.out.println("New Process on cpu " + p.getPCB().getId());
+                            cpu.run();
+                        }
+
+                        if (!io.IOisBusy() && !Wait_Queue.isEmpty()){
+
+                            //get just completed process from the io
+                            try {
+                                Process p = io.getProcess();//TODO will give error
+                                process_Table.update(p.getPCB().getId(), State.Ready);
+
+                                try {
+                                    p.updateBurst();
+                                    p.updateState(State.Ready);
+                                    System.out.println("got off of io " + p.getPCB().getId());
+                                    Ready_Queue.add(p);
+                                }
+                                catch (IndexOutOfBoundsException i) {
+                                    p.updateState(State.Terminated);
+                                    p.getPCB().setEndTime();
+                                    Terminated_Queue.add(p);
+                                    process_Table.update(p.getPCB().getId(), State.Terminated);
+                                    System.out.println("done in io if stmt " + p.getPCB().getId());
+                                }
+                            }
+                            catch (NullPointerException n){}
+                            //put process on the io
+                            Process p = Wait_Queue.get(0);
+                            Wait_Queue.remove(0); //get first in queue
+
+                            //run
+                            p.updateState(State.Running);
+                            process_Table.update(p.getPCB().getId(), State.Running);
+                            io.addProcess(p);
+                            System.out.println("New Process on io " + p.getPCB().getId());
+                            io.run();
+                        }
                     }
+
+                    String vals = "";
+                    for (Process process : Terminated_Queue){
+                        vals += String.valueOf(process.getPCB().getId()) + ", ";
+                    }
+
+                    System.out.println("ready queue " + Ready_Queue.toString());
+                    System.out.println("waiting queue " + Wait_Queue.toString());
+                    System.out.println("Terminated " + vals);
+                    System.out.println("DOME");
 
                     break;
                 case 2:
@@ -71,21 +147,8 @@ public class OS {
                     done = true;
                     break;
                 default:
-                    System.out.println("***k pleassese try again");
+                    System.out.println("Wrong input, try again");
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

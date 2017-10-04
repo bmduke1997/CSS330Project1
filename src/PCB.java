@@ -1,7 +1,7 @@
 public class PCB {
 
     private int id, priority, arrivalOrder;
-    private long arrivalTime;
+    private long arrivalTime, endTime;
     private State state;
     private int pcVal;
 
@@ -36,6 +36,10 @@ public class PCB {
 
     public void setState(State state){
         this.state = state;
+    }
+
+    public void setEndTime() {
+        this.endTime = System.currentTimeMillis();
     }
 
     //To do: PCB data structure of a process

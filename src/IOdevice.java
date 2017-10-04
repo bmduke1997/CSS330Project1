@@ -15,6 +15,10 @@ public class IOdevice implements Runnable{
         this.p = p;
     }
 
+    public Process getProcess() {
+        return p;
+    }
+
     private Pair execute(Process P){
         BusyOrNot=true;
          /* read the CPU burst number, say #, from the position
@@ -55,7 +59,7 @@ public class IOdevice implements Runnable{
         return "ready";
     }
 
-    public Boolean CPUisBusy() { return BusyOrNot;}
+    public Boolean IOisBusy() { return BusyOrNot;}
 
 
     public void run() {

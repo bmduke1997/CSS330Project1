@@ -1,5 +1,3 @@
-import javafx.util.Pair;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -19,8 +17,11 @@ public class Process extends java.lang.Process {
         this.pi = new ProcessImage(process);
     }
 
-    public void updateBurst(State s){
+    public void updateBurst(){
         pair = pi.getBurst();
+    }
+
+    public void updateState(State s){
         pi.getPCB().setState(s);
     }
 

@@ -1,7 +1,3 @@
-import javafx.util.Pair;
-
-import java.util.ArrayList;
-
 public class ProcessImage {
 
     //Process image class of a process including PCB, code, data and stack
