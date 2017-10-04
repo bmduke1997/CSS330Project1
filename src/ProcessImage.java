@@ -1,3 +1,5 @@
+import javafx.util.Pair;
+
 import java.util.ArrayList;
 
 public class ProcessImage {
@@ -5,9 +7,9 @@ public class ProcessImage {
     //Process image class of a process including PCB, code, data and stack
     //snapshot before goes to cpu
 
-    public PCB Pcb_data;
-    public String code ;// this will be the io/cpu burst in the text file
-                        //to do: other variables help you computing the latency, response
+    private PCB Pcb_data;
+    private int[] code ;// this will be the io/cpu burst in the text file
+    private int counter = 0;                    //to do: other variables help you computing the latency, response
 
     public ProcessImage(String process) {
 
@@ -21,13 +23,24 @@ public class ProcessImage {
 
         // get bursts
         char[] burstData = data[3].toCharArray();
-        int[] bursts = new int[burstData.length];
-        for (int i=0; i < bursts.length; i ++) bursts[i] = Character.getNumericValue(burstData[i]);
+        this.code = new int[burstData.length];
+        for (int i=0; i < this.code.length; i ++) this.code[i] = Character.getNumericValue(burstData[i]);
 
-
+        this.Pcb_data = new PCB(id, priority, State.New, 0, arrivalOrder);
 
 
         //set PCB data, code and others
         //set state as "NEW";
+    }
+
+    public Pair getBurst(){
+        int burstType = counter%2;
+        Pair p = new Pair(burstType, code[counter]);
+        counter++;
+        return p;
+    }
+
+    public PCB getPCB() {
+        return Pcb_data;
     }
 }

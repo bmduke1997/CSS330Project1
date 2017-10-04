@@ -1,3 +1,5 @@
+import javafx.util.Pair;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -9,14 +11,26 @@ import java.io.OutputStream;
  */
 
 public class Process extends java.lang.Process {
-    int processId, priority, order;
+    private int processId, priority, order;
+    private ProcessImage pi;
+    private Pair pair;
 
-    public Process(int processId, int priority, int order){
-        this.processId = processId;
-        this.priority = priority;
-        this.order = order;
+    public Process(String process){
+        this.pi = new ProcessImage(process);
     }
 
+    public void updateBurst(State s){
+        pair = pi.getBurst();
+        pi.getPCB().setState(s);
+    }
+
+    public Pair getBurst(){
+        return pair;
+    }
+
+    public PCB getPCB() {
+        return pi.getPCB();
+    }
 
     public OutputStream getOutputStream() {
         return null;

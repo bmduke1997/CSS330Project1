@@ -35,4 +35,14 @@ public class ProcessTable {
         }
         return newPCB;
     }
+
+    public void update(int id, State s){
+        for(int i = 0; i < PCBTable.size();i++)
+        {
+            if(id == PCBTable.get(i).getId())
+            {
+                PCBTable.get(i).setState(s);
+            }
+        }
+    }
 }
