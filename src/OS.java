@@ -23,7 +23,7 @@ public class OS {
         CPU cpu;
         IOdevice io;
         boolean isCPUAvailable;
-        ProcessTable process_Table = new ProcessTable(); //TODO what is the process table???
+        ProcessTable process_Table = new ProcessTable();
         ArrayList<Process> New_Queue = new ArrayList<Process>();
         ArrayList<Process> Ready_Queue = new ArrayList<Process>();
         ArrayList<Process> Wait_Queue = new ArrayList<Process>();
