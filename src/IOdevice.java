@@ -35,7 +35,7 @@ public class IOdevice implements Runnable{
         and sent it to I/O queue)
         */
 
-        for (int i = 0; i == (Integer)P.getBurst().getValue(); i++) BubbleSort((Integer)P.getBurst().getValue());
+        for (int i = 0; i == P.getBurst().getValue(); i++) new  BubbleSort();
 
         BusyOrNot = false;
 
@@ -43,21 +43,6 @@ public class IOdevice implements Runnable{
         return new Pair(); //TODO Make actual return
     }
 
-    public String BubbleSort(int IO_burst){
-        double[] unsorted = new double[50000];
-        for(int i = 0;i<50000; i++) unsorted[i] = Math.random();
-        for(int i = 0; i < IO_burst; i++) {
-            for(int j = 0; j < IO_burst; j++) {
-                if(unsorted[i] < unsorted[j]) {
-                    double temp = unsorted[i];
-                    unsorted[i] = unsorted[j];
-                    unsorted[j] = temp;
-                }
-            }
-        }
-
-        return "ready";
-    }
 
     public Boolean IOisBusy() { return BusyOrNot;}
 

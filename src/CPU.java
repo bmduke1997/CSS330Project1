@@ -3,7 +3,7 @@ public class CPU implements Runnable{
 
     private boolean BusyOrNot;
     public int PC; //Your CPU only has one register PC
-    private int timeSlice;
+    private int timeSlice = -1;
     private Process p;
 
     public CPU(int settimeslice) {
@@ -38,29 +38,20 @@ public class CPU implements Runnable{
         (namely, P has an I/O request and then OS remove it from the ready queue
         and sent it to I/O queue)
         */
-
-         for (int i = 0; i == P.getBurst().getValue(); i++) BubbleSort((Integer)P.getBurst().getValue());
+         int runs = 0;
+        if (timeSlice != -1) {
+            runs = timeSlice;
+            P.updateBurst(timeSlice);
+        }
+        else{
+            runs = P.getBurst().getValue();
+        }
+         for (int i = 0; i == runs; i++) new BubbleSort();
 
          BusyOrNot = false;
 
 
-         return new Pair(0,0); //TODO Make actual return
-    }
-
-    public String BubbleSort(int IO_burst){
-        double[] unsorted = new double[50000];
-        for(int i = 0;i<50000; i++) unsorted[i] = Math.random();
-        for(int i = 0; i < IO_burst; i++) {
-            for(int j = 0; j < IO_burst; j++) {
-                if(unsorted[i] < unsorted[j]) {
-                    double temp = unsorted[i];
-                    unsorted[i] = unsorted[j];
-                    unsorted[j] = temp;
-                }
-            }
-        }
-
-        return "ready";
+         return new Pair(0,0);
     }
 
     public Boolean CPUisBusy() { return BusyOrNot;}

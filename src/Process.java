@@ -18,8 +18,13 @@ public class Process extends java.lang.Process {
         this.processId = this.pi.getPCB().getId();
     }
 
-    public void updateBurst(){
+    public void getNewBurst(){
         pair = pi.getBurst();
+    }
+
+    public void updateBurst(int timeslice){
+        pair = pi.updateBurst(timeslice);
+
     }
 
     public void updateState(State s){

@@ -46,7 +46,7 @@ public class OS {
             Ready_Queue = New_Queue; //first up is a cpu burst so go ahead and move them all over
             //change the state
             for (int i = 0; i < Ready_Queue.size(); i++){
-                Ready_Queue.get(i).updateBurst();
+                Ready_Queue.get(i).getNewBurst();
                 Ready_Queue.get(i).updateState(State.Ready);
                 int id = Ready_Queue.get(i).getPCB().getId();
                 process_Table.update(id, State.Ready);
@@ -68,7 +68,7 @@ public class OS {
 
                                 //see if the process being pulled off is terminated
                                 try{
-                                    p.updateBurst();
+                                    p.getNewBurst();
                                     p.updateState(State.Waiting);
                                     System.out.println("got off of cup" + p.getPCB().getId());
                                     Wait_Queue.add(p);
@@ -106,7 +106,7 @@ public class OS {
                                 process_Table.update(p.getPCB().getId(), State.Ready);
 
                                 try {
-                                    p.updateBurst();
+                                    p.getNewBurst();
                                     p.updateState(State.Ready);
                                     System.out.println("got off of io " + p.getPCB().getId());
                                     Ready_Queue.add(p);
@@ -138,7 +138,7 @@ public class OS {
 
                     String vals = "";
                     for (Process process : Terminated_Queue){
-                        vals += String.valueOf(process.getPCB().getId()) + ", ";
+                        vals += String.valueOf(process.getPCB().getId()) + " total time: " + (process.getPCB().getEndTime() - process.getPCB().getArrivalTime()) + " response time: " + (process.getPCB().getFirstIO() - process.getPCB().getArrivalTime()) + ", ";
                     }
 
                     System.out.println("ready queue " + Ready_Queue.toString());
@@ -147,7 +147,109 @@ public class OS {
                     System.out.println("DOME");
 
                     break;
+
                 case 2:
+
+                    cpu = new CPU(2);
+                    io = new IOdevice();
+
+                    //lets start you genderless people, we don't assume here, what is gender anyway???
+                    while(Terminated_Queue.size() != processNbr){
+                        if(!cpu.CPUisBusy()) {
+                            //get just completed process from the cup
+                            try {
+                                Process p = cpu.getProcess();
+                                cpu.addProcess(null);
+                                System.out.println("process: " + p.getPCB().getId() + " bursts left: " + p.getBurst().getValue());
+                                if(p.getBurst().getValue() > 0){
+                                    Ready_Queue.add(p);
+                                    System.out.println("Ran the extra if");
+                                }
+                                else {
+                                    System.out.println("Ran the extra else");
+
+                                    process_Table.update(p.getPCB().getId(), State.Waiting);
+
+                                    //see if the process being pulled off is terminated
+                                    try {
+                                        p.getNewBurst();
+                                        p.updateState(State.Waiting);
+                                        System.out.println("got off of cup" + p.getPCB().getId());
+                                        Wait_Queue.add(p);
+                                    } catch (IndexOutOfBoundsException i) {
+                                        p.updateState(State.Terminated);
+                                        p.getPCB().setEndTime();
+                                        Terminated_Queue.add(p);
+                                        process_Table.update(p.getPCB().getId(), State.Terminated);
+                                        System.out.println("done in cpu if stmt " + p.getPCB().getId());
+                                    }
+                                }
+                            }
+                            catch (NullPointerException n){}
+
+                            if(!Ready_Queue.isEmpty()) {
+                                //putting process on the cpu
+                                Process p = Ready_Queue.get(0); //get the first in the queue and process in cpu
+                                Ready_Queue.remove(0);
+
+                                //run process
+                                p.updateState(State.Running);
+                                process_Table.update(p.getPCB().getId(), State.Running);
+                                cpu.addProcess(p);
+                                System.out.println("New Process on cpu " + p.getPCB().getId());
+                                cpu.run();
+                            }
+                        }
+
+                        if (!io.IOisBusy()){
+
+                            //get just completed process from the io
+                            try {
+                                Process p = io.getProcess();
+                                io.addProcess(null);
+                                process_Table.update(p.getPCB().getId(), State.Ready);
+
+                                try {
+                                    p.getNewBurst();
+                                    p.updateState(State.Ready);
+                                    System.out.println("got off of io " + p.getPCB().getId());
+                                    Ready_Queue.add(p);
+                                }
+                                catch (IndexOutOfBoundsException i) {
+                                    p.updateState(State.Terminated);
+                                    p.getPCB().setEndTime();
+                                    Terminated_Queue.add(p);
+                                    process_Table.update(p.getPCB().getId(), State.Terminated);
+                                    System.out.println("done in io if stmt " + p.getPCB().getId());
+                                }
+                            }
+                            catch (NullPointerException n){}
+
+                            if (!Wait_Queue.isEmpty()) {
+                                //put process on the io
+                                Process p = Wait_Queue.get(0);
+                                Wait_Queue.remove(0); //get first in queue
+
+                                //run
+                                p.updateState(State.Running);
+                                process_Table.update(p.getPCB().getId(), State.Running);
+                                io.addProcess(p);
+                                System.out.println("New Process on io " + p.getPCB().getId());
+                                io.run();
+                            }
+                        }
+                    }
+
+                    vals = "";
+                    for (Process process : Terminated_Queue){
+                        vals += String.valueOf(process.getPCB().getId()) + " total time: " + (process.getPCB().getEndTime() - process.getPCB().getArrivalTime()) + " response time: " + (process.getPCB().getFirstIO() - process.getPCB().getArrivalTime()) + ", ";
+                    }
+
+                    System.out.println("ready queue " + Ready_Queue.toString());
+                    System.out.println("waiting queue " + Wait_Queue.toString());
+                    System.out.println("Terminated " + vals);
+                    System.out.println("DOME");
+
                     break;
                 case 3:
                     break;

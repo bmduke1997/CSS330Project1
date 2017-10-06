@@ -33,9 +33,18 @@ public class ProcessImage {
         int burstType = counter%2;
         Pair p = new Pair(burstType, code[counter]);
         counter++;
+
+        if (counter == 2) Pcb_data.setFirstIO();
+
         return p;
     }
 
+    public Pair updateBurst(int timeSlice){
+        code[counter - 1] = code[counter - 1] - timeSlice;
+        System.out.println(code[counter - 1]);
+        return new Pair(0, code[counter - 1]);
+
+    }
     public PCB getPCB() {
         return Pcb_data;
     }

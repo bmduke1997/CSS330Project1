@@ -1,7 +1,7 @@
 public class PCB {
 
     private int id, priority, arrivalOrder;
-    private long arrivalTime, endTime;
+    private long arrivalTime, endTime, firstIO;
     private State state;
     private int pcVal;
 
@@ -28,6 +28,18 @@ public class PCB {
 
     public long getArrivalTime() {
         return arrivalTime;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setFirstIO() {
+        this.firstIO = System.currentTimeMillis();
+    }
+
+    public long getFirstIO() {
+        return firstIO;
     }
 
     public State getState() {
