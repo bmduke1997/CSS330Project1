@@ -1,4 +1,3 @@
-import jdk.internal.util.xml.impl.Pair;
 
 import java.util.ArrayList;
 
@@ -40,7 +39,7 @@ public class IOdevice implements Runnable{
         BusyOrNot = false;
 
 
-        return new Pair(); //TODO Make actual return
+        return new Pair(0,0); //TODO Make actual return
     }
 
 

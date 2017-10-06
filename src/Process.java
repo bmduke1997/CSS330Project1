@@ -8,7 +8,7 @@ import java.io.OutputStream;
  * @version 9/28/17
  */
 
-public class Process extends java.lang.Process {
+public class Process extends java.lang.Process implements Comparable {
     private int processId, priority, order;
     private ProcessImage pi;
     private Pair pair;
@@ -16,6 +16,7 @@ public class Process extends java.lang.Process {
     public Process(String process){
         this.pi = new ProcessImage(process);
         this.processId = this.pi.getPCB().getId();
+        this.priority = this.pi.getPriority();
     }
 
     public void getNewBurst(){
@@ -61,5 +62,14 @@ public class Process extends java.lang.Process {
 
     public void destroy() {
 
+    }
+
+    public int compareTo(Object o) {
+        if (o instanceof Process){
+            if(this.priority < ((Process) o).priority) return 1;
+            else if (this.priority == ((Process) o).priority) return 0;
+            else return -1;
+        }
+        return 0;
     }
 }

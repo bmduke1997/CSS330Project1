@@ -5,6 +5,8 @@ public class CPU implements Runnable{
     public int PC; //Your CPU only has one register PC
     private int timeSlice = -1;
     private Process p;
+    private long processNumber = 0;
+    private long time = 0;
 
     public CPU(int settimeslice) {
         this.timeSlice= settimeslice;
@@ -23,7 +25,12 @@ public class CPU implements Runnable{
         return p;
     }
 
+    public double getThroughput(){
+        return (double)processNumber/(double)time;
+    }
+
     private Pair execute(Process P){
+        long start = System.currentTimeMillis();
         BusyOrNot=true;
          /* read the CPU burst number, say #, from the position
         PositionOfNextInstructionToExecute of P.
@@ -38,7 +45,7 @@ public class CPU implements Runnable{
         (namely, P has an I/O request and then OS remove it from the ready queue
         and sent it to I/O queue)
         */
-         int runs = 0;
+        int runs = 0;
         if (timeSlice != -1) {
             runs = timeSlice;
             P.updateBurst(timeSlice);
@@ -46,9 +53,14 @@ public class CPU implements Runnable{
         else{
             runs = P.getBurst().getValue();
         }
-         for (int i = 0; i == runs; i++) new BubbleSort();
+        for (int k = 0; k <= runs; k++){
+            BubbleSort bubbleSort = new BubbleSort();
+            bubbleSort.run();
+         }
 
          BusyOrNot = false;
+
+         time += System.currentTimeMillis() - start;
 
 
          return new Pair(0,0);
@@ -59,5 +71,6 @@ public class CPU implements Runnable{
 
     public void run() {
         execute(p);
+        processNumber ++;
     }
 }
