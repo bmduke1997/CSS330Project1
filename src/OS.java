@@ -61,7 +61,6 @@ public class OS {
                     cpu = new CPU();
                     io = new IOdevice();
 
-                    //lets start you genderless people, we don't assume here, what is gender anyway???
                     while(Terminated_Queue.size() != processNbr){
                         if(!cpu.CPUisBusy()) {
                             //get just completed process from the cup
