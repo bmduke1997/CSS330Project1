@@ -141,7 +141,6 @@ public class OS {
                     cpu = new CPU(2);
                     io = new IOdevice();
 
-                    //lets start you genderless people, we don't assume here, what is gender anyway???
                     while(Terminated_Queue.size() != processNbr){
                         if(!cpu.CPUisBusy()) {
                             //get just completed process from the cup
@@ -323,8 +322,7 @@ public class OS {
                 double avgLatency = toolset.mean();
                 double minLatency = toolset.getMin();
                 double maxLatency = toolset.getMax();
-
-                System.out.println("\nstdLat: " + stdLatency + " avgLat: " + avgLatency + " minLat: " + minLatency + " maxLat: " + maxLatency);
+                System.out.println("\nLatency Standard Deviation: " + stdLatency + " ms Average Latency: " + avgLatency + " ms Min Latency: " + minLatency + " ms Max Latency: " + maxLatency + " ms");
                 toolset = new Toolset(responceTime);
 
                 double stdres = toolset.stdDeviation();
@@ -332,9 +330,9 @@ public class OS {
                 double minres = toolset.getMin();
                 double maxres = toolset.getMax();
 
-                System.out.println("stdRes: " + stdres + " avgRes: " + avgres + " minRes: " + minres + " maxRes: " + maxres);
+                System.out.println("Response Time Standard Deviation: " + stdres + " ms Average Response Time: " + avgres + " ms Min Response Time: " + minres + " ms Max Response Time: " + maxres + " ms");
 
-                System.out.println("Throughput: " + throughput + "\n");
+                System.out.println("Throughput: " + throughput + " Processes/Millisecond\n");
             }
 
             Terminated_Queue = new ArrayList<>(); // empty queues.
